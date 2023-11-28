@@ -1,0 +1,598 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		D4E9BA0323414827002E5B21 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D4E9BA0223414827002E5B21 /* AppDelegate.m */; };
+		D4E9BA0623414827002E5B21 /* Document.m in Sources */ = {isa = PBXBuildFile; fileRef = D4E9BA0523414827002E5B21 /* Document.m */; };
+		D4E9BA0923414827002E5B21 /* Document.xib in Resources */ = {isa = PBXBuildFile; fileRef = D4E9BA0723414827002E5B21 /* Document.xib */; };
+		D4E9BA0C23414827002E5B21 /* Document.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = D4E9BA0A23414827002E5B21 /* Document.xcdatamodeld */; };
+		D4E9BA0E2341482B002E5B21 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D4E9BA0D2341482B002E5B21 /* Assets.xcassets */; };
+		D4E9BA112341482B002E5B21 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = D4E9BA0F2341482B002E5B21 /* MainMenu.xib */; };
+		D4E9BA142341482B002E5B21 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D4E9BA132341482B002E5B21 /* main.m */; };
+		D4E9BA1F2341482B002E5B21 /* yale_osxTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D4E9BA1E2341482B002E5B21 /* yale_osxTests.m */; };
+		D4E9BA2A2341482B002E5B21 /* yale_osxUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = D4E9BA292341482B002E5B21 /* yale_osxUITests.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		D4E9BA1B2341482B002E5B21 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D4E9B9F623414826002E5B21 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D4E9B9FD23414827002E5B21;
+			remoteInfo = yale_osx;
+		};
+		D4E9BA262341482B002E5B21 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D4E9B9F623414826002E5B21 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D4E9B9FD23414827002E5B21;
+			remoteInfo = yale_osx;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		D4E9B9FE23414827002E5B21 /* yale_osx.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = yale_osx.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		D4E9BA0123414827002E5B21 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		D4E9BA0223414827002E5B21 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		D4E9BA0423414827002E5B21 /* Document.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Document.h; sourceTree = "<group>"; };
+		D4E9BA0523414827002E5B21 /* Document.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Document.m; sourceTree = "<group>"; };
+		D4E9BA0823414827002E5B21 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/Document.xib; sourceTree = "<group>"; };
+		D4E9BA0B23414827002E5B21 /* Document.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Document.xcdatamodel; sourceTree = "<group>"; };
+		D4E9BA0D2341482B002E5B21 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		D4E9BA102341482B002E5B21 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		D4E9BA122341482B002E5B21 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D4E9BA132341482B002E5B21 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		D4E9BA152341482B002E5B21 /* yale_osx.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = yale_osx.entitlements; sourceTree = "<group>"; };
+		D4E9BA1A2341482B002E5B21 /* yale_osxTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = yale_osxTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		D4E9BA1E2341482B002E5B21 /* yale_osxTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = yale_osxTests.m; sourceTree = "<group>"; };
+		D4E9BA202341482B002E5B21 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D4E9BA252341482B002E5B21 /* yale_osxUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = yale_osxUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		D4E9BA292341482B002E5B21 /* yale_osxUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = yale_osxUITests.m; sourceTree = "<group>"; };
+		D4E9BA2B2341482B002E5B21 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		D4E9B9FB23414827002E5B21 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D4E9BA172341482B002E5B21 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D4E9BA222341482B002E5B21 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		D4E9B9F523414826002E5B21 = {
+			isa = PBXGroup;
+			children = (
+				D4E9BA0023414827002E5B21 /* yale_osx */,
+				D4E9BA1D2341482B002E5B21 /* yale_osxTests */,
+				D4E9BA282341482B002E5B21 /* yale_osxUITests */,
+				D4E9B9FF23414827002E5B21 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		D4E9B9FF23414827002E5B21 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D4E9B9FE23414827002E5B21 /* yale_osx.app */,
+				D4E9BA1A2341482B002E5B21 /* yale_osxTests.xctest */,
+				D4E9BA252341482B002E5B21 /* yale_osxUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		D4E9BA0023414827002E5B21 /* yale_osx */ = {
+			isa = PBXGroup;
+			children = (
+				D4E9BA0123414827002E5B21 /* AppDelegate.h */,
+				D4E9BA0223414827002E5B21 /* AppDelegate.m */,
+				D4E9BA0423414827002E5B21 /* Document.h */,
+				D4E9BA0523414827002E5B21 /* Document.m */,
+				D4E9BA0723414827002E5B21 /* Document.xib */,
+				D4E9BA0D2341482B002E5B21 /* Assets.xcassets */,
+				D4E9BA0F2341482B002E5B21 /* MainMenu.xib */,
+				D4E9BA122341482B002E5B21 /* Info.plist */,
+				D4E9BA132341482B002E5B21 /* main.m */,
+				D4E9BA152341482B002E5B21 /* yale_osx.entitlements */,
+				D4E9BA0A23414827002E5B21 /* Document.xcdatamodeld */,
+			);
+			path = yale_osx;
+			sourceTree = "<group>";
+		};
+		D4E9BA1D2341482B002E5B21 /* yale_osxTests */ = {
+			isa = PBXGroup;
+			children = (
+				D4E9BA1E2341482B002E5B21 /* yale_osxTests.m */,
+				D4E9BA202341482B002E5B21 /* Info.plist */,
+			);
+			path = yale_osxTests;
+			sourceTree = "<group>";
+		};
+		D4E9BA282341482B002E5B21 /* yale_osxUITests */ = {
+			isa = PBXGroup;
+			children = (
+				D4E9BA292341482B002E5B21 /* yale_osxUITests.m */,
+				D4E9BA2B2341482B002E5B21 /* Info.plist */,
+			);
+			path = yale_osxUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		D4E9B9FD23414827002E5B21 /* yale_osx */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D4E9BA2E2341482B002E5B21 /* Build configuration list for PBXNativeTarget "yale_osx" */;
+			buildPhases = (
+				D4E9B9FA23414827002E5B21 /* Sources */,
+				D4E9B9FB23414827002E5B21 /* Frameworks */,
+				D4E9B9FC23414827002E5B21 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = yale_osx;
+			productName = yale_osx;
+			productReference = D4E9B9FE23414827002E5B21 /* yale_osx.app */;
+			productType = "com.apple.product-type.application";
+		};
+		D4E9BA192341482B002E5B21 /* yale_osxTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D4E9BA312341482B002E5B21 /* Build configuration list for PBXNativeTarget "yale_osxTests" */;
+			buildPhases = (
+				D4E9BA162341482B002E5B21 /* Sources */,
+				D4E9BA172341482B002E5B21 /* Frameworks */,
+				D4E9BA182341482B002E5B21 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D4E9BA1C2341482B002E5B21 /* PBXTargetDependency */,
+			);
+			name = yale_osxTests;
+			productName = yale_osxTests;
+			productReference = D4E9BA1A2341482B002E5B21 /* yale_osxTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		D4E9BA242341482B002E5B21 /* yale_osxUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D4E9BA342341482B002E5B21 /* Build configuration list for PBXNativeTarget "yale_osxUITests" */;
+			buildPhases = (
+				D4E9BA212341482B002E5B21 /* Sources */,
+				D4E9BA222341482B002E5B21 /* Frameworks */,
+				D4E9BA232341482B002E5B21 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D4E9BA272341482B002E5B21 /* PBXTargetDependency */,
+			);
+			name = yale_osxUITests;
+			productName = yale_osxUITests;
+			productReference = D4E9BA252341482B002E5B21 /* yale_osxUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		D4E9B9F623414826002E5B21 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1100;
+				ORGANIZATIONNAME = "Robert Baron";
+				TargetAttributes = {
+					D4E9B9FD23414827002E5B21 = {
+						CreatedOnToolsVersion = 11.0;
+					};
+					D4E9BA192341482B002E5B21 = {
+						CreatedOnToolsVersion = 11.0;
+						TestTargetID = D4E9B9FD23414827002E5B21;
+					};
+					D4E9BA242341482B002E5B21 = {
+						CreatedOnToolsVersion = 11.0;
+						TestTargetID = D4E9B9FD23414827002E5B21;
+					};
+				};
+			};
+			buildConfigurationList = D4E9B9F923414826002E5B21 /* Build configuration list for PBXProject "yale_osx" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = D4E9B9F523414826002E5B21;
+			productRefGroup = D4E9B9FF23414827002E5B21 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				D4E9B9FD23414827002E5B21 /* yale_osx */,
+				D4E9BA192341482B002E5B21 /* yale_osxTests */,
+				D4E9BA242341482B002E5B21 /* yale_osxUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		D4E9B9FC23414827002E5B21 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D4E9BA0E2341482B002E5B21 /* Assets.xcassets in Resources */,
+				D4E9BA0923414827002E5B21 /* Document.xib in Resources */,
+				D4E9BA112341482B002E5B21 /* MainMenu.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D4E9BA182341482B002E5B21 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D4E9BA232341482B002E5B21 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		D4E9B9FA23414827002E5B21 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D4E9BA0C23414827002E5B21 /* Document.xcdatamodeld in Sources */,
+				D4E9BA0623414827002E5B21 /* Document.m in Sources */,
+				D4E9BA142341482B002E5B21 /* main.m in Sources */,
+				D4E9BA0323414827002E5B21 /* AppDelegate.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D4E9BA162341482B002E5B21 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D4E9BA1F2341482B002E5B21 /* yale_osxTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D4E9BA212341482B002E5B21 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D4E9BA2A2341482B002E5B21 /* yale_osxUITests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		D4E9BA1C2341482B002E5B21 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D4E9B9FD23414827002E5B21 /* yale_osx */;
+			targetProxy = D4E9BA1B2341482B002E5B21 /* PBXContainerItemProxy */;
+		};
+		D4E9BA272341482B002E5B21 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D4E9B9FD23414827002E5B21 /* yale_osx */;
+			targetProxy = D4E9BA262341482B002E5B21 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		D4E9BA0723414827002E5B21 /* Document.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D4E9BA0823414827002E5B21 /* Base */,
+			);
+			name = Document.xib;
+			sourceTree = "<group>";
+		};
+		D4E9BA0F2341482B002E5B21 /* MainMenu.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D4E9BA102341482B002E5B21 /* Base */,
+			);
+			name = MainMenu.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		D4E9BA2C2341482B002E5B21 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		D4E9BA2D2341482B002E5B21 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		D4E9BA2F2341482B002E5B21 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = yale_osx/yale_osx.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = yale_osx/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "rbb.yale-osx";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		D4E9BA302341482B002E5B21 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = yale_osx/yale_osx.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = yale_osx/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "rbb.yale-osx";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		D4E9BA322341482B002E5B21 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = yale_osxTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				PRODUCT_BUNDLE_IDENTIFIER = "rbb.yale-osxTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/yale_osx.app/Contents/MacOS/yale_osx";
+			};
+			name = Debug;
+		};
+		D4E9BA332341482B002E5B21 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = yale_osxTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				PRODUCT_BUNDLE_IDENTIFIER = "rbb.yale-osxTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/yale_osx.app/Contents/MacOS/yale_osx";
+			};
+			name = Release;
+		};
+		D4E9BA352341482B002E5B21 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = yale_osxUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "rbb.yale-osxUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_TARGET_NAME = yale_osx;
+			};
+			name = Debug;
+		};
+		D4E9BA362341482B002E5B21 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = yale_osxUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "rbb.yale-osxUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_TARGET_NAME = yale_osx;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		D4E9B9F923414826002E5B21 /* Build configuration list for PBXProject "yale_osx" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D4E9BA2C2341482B002E5B21 /* Debug */,
+				D4E9BA2D2341482B002E5B21 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D4E9BA2E2341482B002E5B21 /* Build configuration list for PBXNativeTarget "yale_osx" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D4E9BA2F2341482B002E5B21 /* Debug */,
+				D4E9BA302341482B002E5B21 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D4E9BA312341482B002E5B21 /* Build configuration list for PBXNativeTarget "yale_osxTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D4E9BA322341482B002E5B21 /* Debug */,
+				D4E9BA332341482B002E5B21 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D4E9BA342341482B002E5B21 /* Build configuration list for PBXNativeTarget "yale_osxUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D4E9BA352341482B002E5B21 /* Debug */,
+				D4E9BA362341482B002E5B21 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		D4E9BA0A23414827002E5B21 /* Document.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				D4E9BA0B23414827002E5B21 /* Document.xcdatamodel */,
+			);
+			currentVersion = D4E9BA0B23414827002E5B21 /* Document.xcdatamodel */;
+			path = Document.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
+	};
+	rootObject = D4E9B9F623414826002E5B21 /* Project object */;
+}

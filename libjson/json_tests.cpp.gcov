@@ -1,0 +1,581 @@
+        -:    0:Source:json_tests.cpp
+        -:    0:Graph:json_tests.gcno
+        -:    0:Data:-
+        -:    0:Runs:0
+        -:    0:Programs:0
+        -:    1://
+        -:    2://  json_tests.cpp
+        -:    3://  
+        -:    4://  Created by Robert Baron on 7/9/18.
+        -:    5://  Copyright © 2018 Robert Baron. All rights reserved.
+        -:    6://
+        -:    7://  These are some unit tests.
+        -:    8:
+        -:    9:#include <gtest/gtest.h>
+        -:   10:
+        -:   11:#include "sym_table.hpp"
+        -:   12:#include "parse_tree.hpp"
+        -:   13:
+    #####:   14:TEST(json_test, EmptyCurlyBraces)
+        -:   15:    {
+        -:   16:    ast_t *pt;
+    #####:   17:    parse_util pu;
+        -:   18:    //go through the basic productions
+    #####:   19:    pt=(ast_t *)pu.parse( "{ }" );
+    #####:   20:    EXPECT_TRUE(pu.get_type(pt)==TYPE_OBJECT);
+        -:   21:
+    #####:   22:    pu.free_parse_tree(pt);
+    #####:   23:    EXPECT_TRUE(true);
+    #####:   24:    }
+        -:   25:
+    #####:   26:TEST(json_test, JsonKvPairNull )
+        -:   27:    {
+        -:   28:    ast_t *pt, *st;
+    #####:   29:    parse_util pu;
+    #####:   30:    pt=(ast_t *)pu.parse(  "{ test:null }" );
+    #####:   31:    EXPECT_TRUE(pu.get_type(pt)==TYPE_OBJECT);
+        -:   32:
+    #####:   33:    st=pu.get_rvalue(pt);
+    #####:   34:    EXPECT_TRUE(pu.get_type(st)==TYPE_KEYVALUE);
+    #####:   35:    EXPECT_TRUE(pu.cmp_key(st,"test",5)==0);
+    #####:   36:    EXPECT_TRUE(pu.get_type(pu.get_value(st))==TYPE_NULL);
+        -:   37:    
+    #####:   38:    st=pu.get_ValueFromKey(pt, "test", 5);
+    #####:   39:    EXPECT_TRUE(st);
+    #####:   40:    if(st)
+        -:   41:        {
+    #####:   42:        EXPECT_TRUE(pu.get_type(st)==TYPE_NULL);
+    #####:   43:        }
+    #####:   44:    st=pu.get_ValueFromKey(pt, "dummy",6);
+    #####:   45:    EXPECT_FALSE(st);
+        -:   46:
+    #####:   47:    pu.free_parse_tree(pt);
+    #####:   48:    EXPECT_TRUE(true);
+    #####:   49:    }
+        -:   50:
+    #####:   51:TEST(json_test, JsonKvPairTrue )
+        -:   52:    {
+        -:   53:    ast_t *pt, *st;
+    #####:   54:    parse_util pu;
+    #####:   55:    pt=(ast_t *)pu.parse(  "{ test:true }" );
+    #####:   56:    EXPECT_TRUE(pu.get_type(pt)==TYPE_OBJECT);
+        -:   57:
+    #####:   58:    st=pu.get_ValueFromKey(pt, "test", 5);
+    #####:   59:    EXPECT_TRUE(st);
+    #####:   60:    if(st)
+        -:   61:        {
+    #####:   62:        EXPECT_TRUE(pu.get_type(st)==TYPE_BOOL);
+    #####:   63:        EXPECT_TRUE(pu.get_bool(st));
+    #####:   64:        }
+    #####:   65:    st=pu.get_ValueFromKey(pt, "dummy",6);
+    #####:   66:    EXPECT_FALSE(st);
+        -:   67:
+        -:   68:    //pu.dump_parse_tree("versions",rv);
+    #####:   69:    pu.free_parse_tree(pt);
+    #####:   70:    EXPECT_TRUE(true);
+    #####:   71:    }
+        -:   72:
+    #####:   73:TEST(json_test, JsonKvPairFalse )
+        -:   74:    {
+        -:   75:    ast_t *pt, *st;
+    #####:   76:    parse_util pu;
+    #####:   77:    pt=(ast_t *)pu.parse(  "{ test:false }" );
+    #####:   78:    EXPECT_TRUE(pu.get_type(pt)==TYPE_OBJECT);
+        -:   79:
+    #####:   80:    st=pu.get_ValueFromKey(pt, "test", 5);
+    #####:   81:    EXPECT_TRUE(st);
+    #####:   82:    if(st)
+        -:   83:        {
+    #####:   84:        EXPECT_TRUE(pu.get_type(st)==TYPE_BOOL);
+    #####:   85:        EXPECT_FALSE(pu.get_bool(st));
+    #####:   86:        }
+    #####:   87:    st=pu.get_ValueFromKey(pt, "dummy",6);
+    #####:   88:    EXPECT_FALSE(st);
+        -:   89:
+        -:   90:    //pu.dump_parse_tree("versions",rv);
+    #####:   91:    pu.free_parse_tree(pt);
+    #####:   92:    EXPECT_TRUE(true);
+    #####:   93:    }
+        -:   94:
+    #####:   95:TEST(json_test, JsonKvPairQuotedValue )
+        -:   96:    {
+        -:   97:    ast_t *pt, *st;
+    #####:   98:    parse_util pu;
+    #####:   99:    pt=(ast_t *)pu.parse(  "{ test:'ABC' }" );
+    #####:  100:    EXPECT_TRUE(pu.get_type(pt)==TYPE_OBJECT);
+        -:  101:
+    #####:  102:    st=pu.get_ValueFromKey(pt, "test", 5);
+    #####:  103:    EXPECT_TRUE(st);
+    #####:  104:    if(st)
+        -:  105:        {
+    #####:  106:        EXPECT_TRUE(pu.get_type(st)==TYPE_STRING);
+        -:  107:
+        -:  108:        char tmp_str[50];
+    #####:  109:        pu.get_string(st,&(tmp_str[0]), 50);
+        -:  110:        //printf("tmp_str = %s\n",tmp_str);
+        -:  111:        //exit(0);
+    #####:  112:        EXPECT_TRUE( strcmp(tmp_str,"ABC")==0 );
+    #####:  113:        }
+    #####:  114:    st=pu.get_ValueFromKey(pt, "dummy",6);
+    #####:  115:    EXPECT_FALSE(st);
+        -:  116:
+        -:  117:    //pu.dump_parse_tree("versions",rv);
+    #####:  118:    pu.free_parse_tree(pt);
+    #####:  119:    EXPECT_TRUE(true);
+    #####:  120:    }
+        -:  121:
+    #####:  122:TEST(json_test, JsonKvPairUnquotedStrValue )
+        -:  123:    {
+        -:  124:    ast_t *pt, *st;
+    #####:  125:    parse_util pu;
+    #####:  126:    pt=(ast_t *)pu.parse(  "{ test:ABC }" );
+    #####:  127:    EXPECT_TRUE(pu.get_type(pt)==TYPE_OBJECT);
+        -:  128:
+    #####:  129:    st=pu.get_ValueFromKey(pt, "test", 5);
+    #####:  130:    EXPECT_TRUE(st);
+    #####:  131:    if(st)
+        -:  132:        {
+    #####:  133:        EXPECT_TRUE(pu.get_type(st)==TYPE_STRING);
+        -:  134:
+        -:  135:        char tmp_str[50];
+    #####:  136:        pu.get_string(st,&(tmp_str[0]), 50);
+    #####:  137:        EXPECT_TRUE( strcmp(tmp_str,"ABC")==0 );
+    #####:  138:        }
+    #####:  139:    st=pu.get_ValueFromKey(pt, "dummy",6);
+    #####:  140:    EXPECT_FALSE(st);
+        -:  141:
+        -:  142:    //pu.dump_parse_tree("versions",rv);
+    #####:  143:    pu.free_parse_tree(pt);
+    #####:  144:    EXPECT_TRUE(true);
+    #####:  145:    }
+        -:  146:
+    #####:  147:TEST(json_test, JsonKvPairUnquotedIntValue )
+        -:  148:    {
+        -:  149:    ast_t *pt, *st;
+    #####:  150:    parse_util pu;
+    #####:  151:    pt=(ast_t *)pu.parse(  "{ test:123 }" );
+    #####:  152:    EXPECT_TRUE(pu.get_type(pt)==TYPE_OBJECT);
+        -:  153:
+    #####:  154:    st=pu.get_ValueFromKey(pt, "test", 5);
+    #####:  155:    EXPECT_TRUE(st);
+    #####:  156:    if(st)
+        -:  157:        {
+        -:  158:        //TYPE_DOUBLE is a basic number type.
+    #####:  159:        EXPECT_TRUE(pu.get_type(st)==TYPE_DOUBLE);
+    #####:  160:        EXPECT_DOUBLE_EQ(123,pu.get_double(st));
+    #####:  161:        }
+    #####:  162:    st=pu.get_ValueFromKey(pt, "dummy",6);
+    #####:  163:    EXPECT_FALSE(st);
+        -:  164:
+        -:  165:    //pu.dump_parse_tree("versions",rv);
+    #####:  166:    pu.free_parse_tree(pt);
+    #####:  167:    EXPECT_TRUE(true);
+    #####:  168:    }
+        -:  169:
+    #####:  170:TEST(json_test, JsonKvPairUnquotedDoubleValue )
+        -:  171:    {
+        -:  172:    ast_t *pt, *st;
+    #####:  173:    parse_util pu;
+    #####:  174:    pt=(ast_t *)pu.parse(  "{ test:123.456 }" );
+    #####:  175:    EXPECT_TRUE(pu.get_type(pt)==TYPE_OBJECT);
+        -:  176:
+    #####:  177:    st=pu.get_ValueFromKey(pt, "test", 5);
+    #####:  178:    EXPECT_TRUE(st);
+    #####:  179:    if(st)
+        -:  180:        {
+        -:  181:        //TYPE_DOUBLE is a basic number type.
+    #####:  182:        EXPECT_TRUE(pu.get_type(st)==TYPE_DOUBLE);
+    #####:  183:        EXPECT_DOUBLE_EQ(123.456,pu.get_double(st));
+    #####:  184:        }
+    #####:  185:    st=pu.get_ValueFromKey(pt, "dummy",6);
+    #####:  186:    EXPECT_FALSE(st);
+        -:  187:
+        -:  188:    //pu.dump_parse_tree("versions",rv);
+    #####:  189:    pu.free_parse_tree(pt);
+    #####:  190:    EXPECT_TRUE(true);
+    #####:  191:    }
+        -:  192:
+    #####:  193:TEST(json_test, JsonKvPairUnquotedDoubleUnquotedStrValue )
+        -:  194:    {
+        -:  195:    ast_t *pt, *st;
+    #####:  196:    parse_util pu;
+    #####:  197:    pt=(ast_t *)pu.parse(  "{ test:123.456, test1:ABC }" );
+    #####:  198:    EXPECT_TRUE(pu.get_type(pt)==TYPE_OBJECT);
+        -:  199:
+    #####:  200:    st=pu.get_ValueFromKey(pt, "test", 5);
+    #####:  201:    EXPECT_TRUE(st);
+    #####:  202:    if(st)
+        -:  203:        {
+        -:  204:        //TYPE_DOUBLE is a basic number type.
+    #####:  205:        EXPECT_TRUE(pu.get_type(st)==TYPE_DOUBLE);
+    #####:  206:        EXPECT_DOUBLE_EQ(123.456,pu.get_double(st));
+    #####:  207:        }
+    #####:  208:    st=pu.get_ValueFromKey(pt, "test1", 5);
+    #####:  209:    EXPECT_TRUE(st);
+    #####:  210:    if(st)
+        -:  211:        {
+    #####:  212:        EXPECT_TRUE(pu.get_type(st)==TYPE_STRING);
+        -:  213:        char tmp_str[50];
+    #####:  214:        pu.get_string(st,&(tmp_str[0]), 50);
+    #####:  215:        EXPECT_TRUE( strcmp(tmp_str,"ABC")==0 );
+    #####:  216:        }
+    #####:  217:    st=pu.get_ValueFromKey(pt, "dummy",6);
+    #####:  218:    EXPECT_FALSE(st);
+        -:  219:
+        -:  220:    //pu.dump_parse_tree("versions",rv);
+    #####:  221:    pu.free_parse_tree(pt);
+    #####:  222:    EXPECT_TRUE(true);
+    #####:  223:    }
+        -:  224:
+    #####:  225:TEST(json_test, JsonKvPairArray )
+        -:  226:    {
+        -:  227:    ast_t *pt, *st;
+    #####:  228:    parse_util pu;
+    #####:  229:    pt=(ast_t *)pu.parse(  "{test:[123.456,321]}" );
+    #####:  230:    EXPECT_TRUE(pu.get_type(pt)==TYPE_OBJECT);
+        -:  231:
+    #####:  232:    st=pu.get_ValueFromKey(pt, "test", 5);
+    #####:  233:    EXPECT_TRUE(st);
+    #####:  234:    if(st)
+        -:  235:        {
+        -:  236:        //TYPE_DOUBLE is a basic number type.
+    #####:  237:        EXPECT_TRUE(pu.get_type(st)==TYPE_ARRAY);
+    #####:  238:        ast_t *element=pu.get_arrayValue(st,0);
+    #####:  239:        EXPECT_DOUBLE_EQ(123.456,pu.get_double(element));
+    #####:  240:        EXPECT_DOUBLE_EQ(123.456,pu.get_double(pu.get_arrayValue(st,0)));
+        -:  241:
+    #####:  242:        element=pu.get_arrayValue(st,1);
+        -:  243:        //EXPECT_DOUBLE_EQ(123.456,pu.get_double(element));
+        -:  244:        //EXPECT_DOUBLE_EQ(123.456,pu.get_double(pu.get_arrayValue(st,1)));
+        -:  245:
+    #####:  246:        }
+        -:  247:    //st=pu.get_ValueFromKey(pt, "test1", 5);
+        -:  248:    //EXPECT_TRUE(st);
+        -:  249:    //if(st)
+        -:  250:    //    {
+        -:  251:    //    EXPECT_TRUE(pu.get_type(st)==TYPE_STRING);
+        -:  252:    //    char tmp_str[50];
+        -:  253:    //    pu.get_string(st,&(tmp_str[0]), 50);
+        -:  254:    //    EXPECT_TRUE( strcmp(tmp_str,"ABC")==0 );
+        -:  255:    //    }
+        -:  256:    //st=pu.get_ValueFromKey(pt, "dummy",6);
+        -:  257:    //EXPECT_FALSE(st);
+        -:  258:
+        -:  259:    //pu.dump_parse_tree("versions",rv);
+    #####:  260:    pu.free_parse_tree(pt);
+    #####:  261:    EXPECT_TRUE(true);
+    #####:  262:    }
+        -:  263:
+    #####:  264:TEST(json_test, JsonEmptyArray )     
+        -:  265:    {     
+        -:  266:    ast_t *pt, *st;     
+    #####:  267:    parse_util pu;
+    #####:  268:    pt=(ast_t *)pu.parse(  "[ ]" );
+    #####:  269:    EXPECT_TRUE(pu.get_type(pt)==TYPE_ARRAY);
+    #####:  270:    EXPECT_TRUE(pu.get_arrayLength(pt)==0);
+        -:  271:    //pu.dump_parse_tree("versions",rv);
+    #####:  272:    pu.free_parse_tree(pt);
+    #####:  273:    EXPECT_TRUE(true);
+    #####:  274:    }
+        -:  275:
+    #####:  276:TEST(json_test, JsonArrayNullValue )     
+        -:  277:    {
+        -:  278:    ast_t *pt, *st;     
+    #####:  279:    parse_util pu;
+    #####:  280:    pt=(ast_t *)pu.parse(  "[ null ]" );
+    #####:  281:    EXPECT_TRUE(pu.get_type(pt)==TYPE_ARRAY);
+    #####:  282:    EXPECT_TRUE(pu.get_arrayLength(pt)==1);
+        -:  283:    //pu.dump_parse_tree("versions",rv);
+    #####:  284:    pu.free_parse_tree(pt);
+    #####:  285:    EXPECT_TRUE(true);
+    #####:  286:    }
+        -:  287: 
+    #####:  288:TEST(json_test, JsonArrayTrueValue )     
+        -:  289:    {     
+        -:  290:    ast_t *pt, *st;     
+    #####:  291:    parse_util pu;
+    #####:  292:    pt=(ast_t *)pu.parse(  "[ true ]" );
+    #####:  293:    EXPECT_TRUE(pu.get_type(pt)==TYPE_ARRAY);
+    #####:  294:    EXPECT_TRUE(pu.get_arrayLength(pt)==1);
+        -:  295:    //pu.dump_parse_tree("versions",rv);
+    #####:  296:    pu.free_parse_tree(pt);
+    #####:  297:    EXPECT_TRUE(true);
+    #####:  298:    }
+        -:  299:
+    #####:  300:TEST(json_test, JsonArrayFalseValue )     
+        -:  301:    {     
+        -:  302:    ast_t *pt, *st;     
+    #####:  303:    parse_util pu;
+    #####:  304:    pt=(ast_t *)pu.parse(  "[ false ]" );
+    #####:  305:    EXPECT_TRUE(pu.get_type(pt)==TYPE_ARRAY);
+    #####:  306:    EXPECT_TRUE(pu.get_arrayLength(pt)==1);
+        -:  307:    //pu.dump_parse_tree("versions",rv);
+    #####:  308:    pu.free_parse_tree(pt);
+    #####:  309:    EXPECT_TRUE(true);
+    #####:  310:    }
+        -:  311:
+    #####:  312:TEST(json_test, JsonArrayQuotedStrValue )     
+        -:  313:    {     
+        -:  314:    ast_t *pt, *st;     
+    #####:  315:    parse_util pu;
+    #####:  316:    pt=(ast_t *)pu.parse(  "[ 'ABC' ]" );
+    #####:  317:    EXPECT_TRUE(pu.get_type(pt)==TYPE_ARRAY);
+    #####:  318:    EXPECT_TRUE(pu.get_arrayLength(pt)==1);
+        -:  319:    //pu.dump_parse_tree("versions",rv);
+    #####:  320:    pu.free_parse_tree(pt);
+    #####:  321:    EXPECT_TRUE(true);
+    #####:  322:    }
+        -:  323:
+    #####:  324:TEST(json_test, JsonArrayUnquotedStrValue )     
+        -:  325:    {     
+        -:  326:    ast_t *pt, *st;     
+    #####:  327:    parse_util pu;
+    #####:  328:    pt=(ast_t *)pu.parse(  "[ ABC ]" );
+    #####:  329:    EXPECT_TRUE(pu.get_type(pt)==TYPE_ARRAY);
+    #####:  330:    EXPECT_TRUE(pu.get_arrayLength(pt)==1);
+        -:  331:    //pu.dump_parse_tree("versions",rv);
+    #####:  332:    pu.free_parse_tree(pt);
+    #####:  333:    EXPECT_TRUE(true);
+    #####:  334:    }
+        -:  335:
+    #####:  336:TEST(json_test, JsonArrayNumValue )     
+        -:  337:    {     
+        -:  338:    ast_t *pt, *st;     
+    #####:  339:    parse_util pu;
+    #####:  340:    pt=(ast_t *)pu.parse(  "[ 123 ]" );
+    #####:  341:    EXPECT_TRUE(pu.get_type(pt)==TYPE_ARRAY);
+    #####:  342:    EXPECT_TRUE(pu.get_arrayLength(pt)==1);
+        -:  343:    //pu.dump_parse_tree("versions",rv);
+    #####:  344:    pu.free_parse_tree(pt);
+    #####:  345:    EXPECT_TRUE(true);
+    #####:  346:    }
+        -:  347:
+    #####:  348:TEST(json_test, JsonArrayDoubleValue )     
+        -:  349:    {     
+        -:  350:    ast_t *pt, *st;     
+    #####:  351:    parse_util pu;
+    #####:  352:    pt=(ast_t *)pu.parse(  "[ 123.456 ]" );
+    #####:  353:    EXPECT_TRUE(pu.get_type(pt)==TYPE_ARRAY);
+    #####:  354:    EXPECT_TRUE(pu.get_arrayLength(pt)==1);
+        -:  355:    //pu.dump_parse_tree("versions",rv);
+    #####:  356:    pu.free_parse_tree(pt);
+    #####:  357:    EXPECT_TRUE(true);
+    #####:  358:    }
+        -:  359:
+    #####:  360:TEST(json_test, JsonArrayQuotedStringValue )     
+        -:  361:    {     
+        -:  362:    ast_t *pt, *st;     
+    #####:  363:    parse_util pu;
+    #####:  364:    pt=(ast_t *)pu.parse(  "['1']" );
+    #####:  365:    EXPECT_TRUE(pu.get_type(pt)==TYPE_ARRAY);
+    #####:  366:    EXPECT_TRUE(pu.get_arrayLength(pt)==1);
+        -:  367:    //pu.dump_parse_tree("versions",rv);
+    #####:  368:    pu.free_parse_tree(pt);
+    #####:  369:    EXPECT_TRUE(true);
+    #####:  370:    }
+        -:  371:
+    #####:  372:TEST(json_test, JsonArrayStrStrValues )     
+        -:  373:    {     
+        -:  374:    ast_t *pt, *st;     
+    #####:  375:    parse_util pu;
+    #####:  376:    pt=(ast_t *)pu.parse(  "['1','2']" );
+    #####:  377:    EXPECT_TRUE(pu.get_type(pt)==TYPE_ARRAY);
+    #####:  378:    EXPECT_TRUE(pu.get_arrayLength(pt)==2);
+        -:  379:    //pu.dump_parse_tree("versions",rv);
+    #####:  380:    pu.free_parse_tree(pt);
+    #####:  381:    EXPECT_TRUE(true);
+    #####:  382:    }
+        -:  383:
+    #####:  384:TEST(json_test, JsonArrayStrStrArrays )     
+        -:  385:    {     
+        -:  386:    ast_t *pt, *st;     
+    #####:  387:    parse_util pu;
+    #####:  388:    pt=(ast_t *)pu.parse(  "[['1','2'],['3','4']]" );
+    #####:  389:    EXPECT_TRUE(pu.get_type(pt)==TYPE_ARRAY);
+        -:  390:
+        -:  391:    //pu.dump_parse_tree("versions",rv);
+    #####:  392:    pu.free_parse_tree(pt);
+    #####:  393:    EXPECT_TRUE(true);
+    #####:  394:    }
+        -:  395:
+    #####:  396:TEST(json_test, JsonArrayStrStrStrValue )     
+        -:  397:    {     
+        -:  398:    ast_t *pt, *st;     
+    #####:  399:    parse_util pu;
+    #####:  400:    pt=(ast_t *)pu.parse(  "['1','2','3']" );
+    #####:  401:    EXPECT_TRUE(pu.get_type(pt)==TYPE_ARRAY);
+        -:  402:    //printf("array length: %d\n",pu.get_arrayLength(pt));
+    #####:  403:    st=pu.get_arrayValue(pt, 0);
+        -:  404:    //printf("type: %c",pu.get_op(st));
+        -:  405:    char tmp_str[50];
+    #####:  406:    pu.get_string(st,&(tmp_str[0]), 50);
+        -:  407:    //EXPECT_TRUE(pu.get_arrayLength(pt)==3);
+        -:  408:    //pu.dump_parse_tree("versions",pt);
+    #####:  409:    pu.free_parse_tree(pt);
+    #####:  410:    EXPECT_TRUE(true);
+    #####:  411:    }
+        -:  412:
+    #####:  413:TEST(json_test, JsonArrayStrEmpty )     
+        -:  414:    {     
+        -:  415:    ast_t *pt, *st;     
+    #####:  416:    parse_util pu;
+    #####:  417:    pt=(ast_t *)pu.parse(  "['1',]" );
+    #####:  418:    EXPECT_TRUE(pu.get_type(pt)==TYPE_ARRAY);
+    #####:  419:    EXPECT_TRUE(pu.get_arrayLength(pt)==2);
+        -:  420:    //pu.dump_parse_tree("versions",rv);
+    #####:  421:    pu.free_parse_tree(pt);
+    #####:  422:    EXPECT_TRUE(true);
+    #####:  423:    }
+        -:  424:
+    #####:  425:TEST(json_test, JsonArrayStrStrEmpty )     
+        -:  426:    {     
+        -:  427:    ast_t *pt, *st;     
+    #####:  428:    parse_util pu;
+    #####:  429:    pt=(ast_t *)pu.parse(  "['1','2',]" );
+    #####:  430:    EXPECT_TRUE(pu.get_type(pt)==TYPE_ARRAY);
+    #####:  431:    EXPECT_TRUE(pu.get_arrayLength(pt)==3);
+        -:  432:    //pu.dump_parse_tree("versions",rv);
+    #####:  433:    pu.free_parse_tree(pt);
+    #####:  434:    EXPECT_TRUE(true);
+    #####:  435:    }
+        -:  436:
+    #####:  437:TEST(json_test, JsonArrayStrStrArraysEmpty )     
+        -:  438:    {     
+        -:  439:    ast_t *pt, *st;     
+    #####:  440:    parse_util pu;
+    #####:  441:    pt=(ast_t *)pu.parse(  "[['1','2',],['3','4'],]" );
+    #####:  442:    EXPECT_TRUE(pu.get_type(pt)==TYPE_ARRAY);
+        -:  443:
+        -:  444:    //pu.dump_parse_tree("versions",rv);
+    #####:  445:    pu.free_parse_tree(pt);
+    #####:  446:    EXPECT_TRUE(true);
+    #####:  447:    }
+        -:  448:
+    #####:  449:TEST(json_test, JsonArrayStrStrStrEmpty )     
+        -:  450:    {     
+        -:  451:    ast_t *pt, *st;    
+    #####:  452:    parse_util pu;
+    #####:  453:    pt=(ast_t *)pu.parse(  "['1','2','3',]" );
+    #####:  454:    EXPECT_TRUE(pu.get_type(pt)==TYPE_ARRAY);
+    #####:  455:    EXPECT_TRUE(pu.get_arrayLength(pt)==4);
+        -:  456:    //pu.dump_parse_tree("versions",rv);
+    #####:  457:    pu.free_parse_tree(pt);
+    #####:  458:    EXPECT_TRUE(true);
+    #####:  459:    }
+        -:  460:
+    #####:  461:TEST(json_test, JsonStrValue )     
+        -:  462:    {     
+        -:  463:    ast_t *pt, *st;     
+    #####:  464:    parse_util pu;
+    #####:  465:    pt=(ast_t *)pu.parse(  "{ 'name' }" );  // This should produce a syntax error
+        -:  466:    //EXPECT_TRUE(pu.get_type(pt)==TYPE_OBJECT);
+        -:  467:    //pu.dump_parse_tree("versions",rv);
+    #####:  468:    pu.free_parse_tree(pt);
+    #####:  469:    EXPECT_TRUE(true);
+    #####:  470:    }
+        -:  471:
+    #####:  472:TEST(json_test, JsonKeyValEmptyJson )     
+        -:  473:    {     
+        -:  474:    ast_t *pt, *st;     
+    #####:  475:    parse_util pu;
+    #####:  476:    pt=(ast_t *)pu.parse(  "{key1:{}}");
+    #####:  477:    EXPECT_TRUE(pu.get_type(pt)==TYPE_OBJECT);
+        -:  478:
+        -:  479:    //pu.dump_parse_tree("versions",rv);
+    #####:  480:    pu.free_parse_tree(pt);
+    #####:  481:    EXPECT_TRUE(true);
+    #####:  482:    }
+        -:  483:
+    #####:  484:TEST(json_test, JsonKeyValueArrayJsonKeyVal )     
+        -:  485:    {     
+        -:  486:    ast_t *pt, *st;     
+    #####:  487:    parse_util pu;
+    #####:  488:    pt=(ast_t *)pu.parse(  "{key1:[{name:val1}]}");
+    #####:  489:    EXPECT_TRUE(pu.get_type(pt)==TYPE_OBJECT);
+        -:  490:
+        -:  491:    //pu.dump_parse_tree("versions",rv);
+    #####:  492:    pu.free_parse_tree(pt);
+    #####:  493:    EXPECT_TRUE(true);
+    #####:  494:    }
+        -:  495:
+    #####:  496:TEST(json_test, JsonKeyValueArrayJsonKeyValkeyVal )     
+        -:  497:    {     
+        -:  498:    ast_t *pt, *st;     
+    #####:  499:    parse_util pu;
+    #####:  500:    pt=(ast_t *)pu.parse(  "{key1:[{key1a:val1,key1b:[]}]}");
+    #####:  501:    EXPECT_TRUE(pu.get_type(pt)==TYPE_OBJECT);
+        -:  502:
+        -:  503:    //pu.dump_parse_tree("versions",rv);
+    #####:  504:    pu.free_parse_tree(pt);
+    #####:  505:    EXPECT_TRUE(true);
+    #####:  506:    }
+        -:  507:
+    #####:  508:TEST(json_test, Json004_Test )     
+        -:  509:    {     
+        -:  510:    ast_t *pt, *st;     
+    #####:  511:    parse_util pu;
+    #####:  512:    pt=(ast_t *)pu.parse(  "{level:[{n:0, s:S}]}");  //this needs to be fixed! the [{n:  somehow the n is being skipped.
+        -:  513:    //EXPECT_TRUE(pu.get_type(pt)==TYPE_OBJECT);
+        -:  514:    //printf("op=%c\n",pt->op);
+        -:  515:    //pu.dump_parse_tree("versions",pt);
+        -:  516:    //if(!pt) printf("pt==NULL\n");
+    #####:  517:    pu.free_parse_tree(pt);
+    #####:  518:    EXPECT_TRUE(true);
+    #####:  519:    }
+        -:  520:
+    #####:  521:TEST(json_test, JsonKeyValueArrayjsonKeyValueArrays )     
+        -:  522:    {     
+        -:  523:    ast_t *pt, *st;     
+    #####:  524:    parse_util pu;
+    #####:  525:    pt=(ast_t *)pu.parse(  "{key1:[{key1a:[{key2a:'val2a',id:0}],level:[{n:0, s:S}]}]}");  //this needs to be fixed! the [{n:  somehow the n is being skipped.
+        -:  526:    //EXPECT_TRUE(pu.get_type(pt)==TYPE_OBJECT);
+        -:  527:    //printf("op=%c\n",pt->op);
+        -:  528:    //pu.dump_parse_tree("versions",pt);
+        -:  529:    //if(!pt) printf("pt==NULL\n");
+    #####:  530:    pu.free_parse_tree(pt);
+    #####:  531:    EXPECT_TRUE(true);
+    #####:  532:    }
+        -:  533:
+    #####:  534:TEST(json_test, Json001 )     
+        -:  535:    {     
+        -:  536:    ast_t *pt, *st;     
+    #####:  537:    parse_util pu;
+    #####:  538:    pt=(ast_t *)pu.parse(  "{DanceDefinition:[{name:waltz,figures:[{name:'Prep Step',id:0}],level:[{l:0, s:S}]}]}");
+    #####:  539:    EXPECT_TRUE(pu.get_type(pt)==TYPE_OBJECT);
+        -:  540:
+        -:  541:    //pu.dump_parse_tree("versions",rv);
+    #####:  542:    pu.free_parse_tree(pt);
+    #####:  543:    EXPECT_TRUE(true);
+    #####:  544:    }
+        -:  545:
+    #####:  546:TEST(json_test, Json002 )     
+        -:  547:    {     
+        -:  548:    ast_t *pt, *st;     
+    #####:  549:    parse_util pu;
+    #####:  550:    pt=(ast_t *)pu.parse(  "{DanceDefinition:[{name:waltz,figures:[{name:'Prep Step',id:0}],level:[{'n':0, s:S}]}]}");  //but 'n' is not
+    #####:  551:    EXPECT_TRUE(pu.get_type(pt)==TYPE_OBJECT);
+        -:  552:
+        -:  553:    //pu.dump_parse_tree("versions",rv);
+    #####:  554:    pu.free_parse_tree(pt);
+    #####:  555:    EXPECT_TRUE(true);
+    #####:  556:    }
+        -:  557:
+    #####:  558:TEST(json_test, Json003 )     
+        -:  559:    {     
+        -:  560:    ast_t *pt, *st;     
+    #####:  561:    parse_util pu;
+    #####:  562:    pt=(ast_t *)pu.parse(  "{DanceDefinition:[{name:waltz,figures:[{name:'Prep Step',id:0}],level:[{le:0, s:S}]}]}"); //and le is not
+    #####:  563:    EXPECT_TRUE(pu.get_type(pt)==TYPE_OBJECT);
+        -:  564:
+        -:  565:    //pu.dump_parse_tree("versions",rv);
+    #####:  566:    pu.free_parse_tree(pt);
+    #####:  567:    EXPECT_TRUE(true);
+    #####:  568:    }
+        -:  569:
+        -:  570://- (void)testPerformanceExample {
+        -:  571://    // This is an example of a performance test case.
+        -:  572://    [self measureBlock:^{
+        -:  573://        // Put the code you want to measure the time of here.
+        -:  574://    }];
+        -:  575://}
+        -:  576:

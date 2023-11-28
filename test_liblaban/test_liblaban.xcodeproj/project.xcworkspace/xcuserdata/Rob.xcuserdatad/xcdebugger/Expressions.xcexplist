@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VariablesViewState
+   version = "1.0">
+   <ContextStates>
+      <ContextState
+         contextName = "test_column_GetterAndSetters_Test::TestBody():test_column.cpp">
+         <PersistentStrings>
+            <PersistentString
+               value = "&amp;measures">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+   </ContextStates>
+</VariablesViewState>

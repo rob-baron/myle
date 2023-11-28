@@ -1,0 +1,696 @@
+        -:    0:Source:./parse_tree.hpp
+        -:    0:Graph:json_tests.gcno
+        -:    0:Data:-
+        -:    0:Runs:0
+        -:    0:Programs:0
+        -:    1://
+        -:    2://  parse_tree.hpp
+        -:    3://  ALE
+        -:    4://
+        -:    5://  Created by Robert Baron on 10/10/18.
+        -:    6://  Copyright © 2018 Robert Baron. All rights reserved.
+        -:    7://
+        -:    8:
+        -:    9:#ifndef parse_tree_hpp
+        -:   10:#define parse_tree_hpp
+        -:   11:
+        -:   12:#include <stdio.h>
+        -:   13://  OpenStackData.hpp
+        -:   14://  Cloudy2
+        -:   15://
+        -:   16://  Created by Robert Baron on 7/12/17.
+        -:   17://  Copyright © 2017 Robert Baron. All rights reserved.
+        -:   18://
+        -:   19:
+        -:   20:#ifndef OpenStackAnalysis_hpp
+        -:   21:#define OpenStackAnalysis_hpp
+        -:   22:
+        -:   23:#define BAD_TYPE     -2
+        -:   24:#define SEPARATOR    -1
+        -:   25:#define TYPE_UNK      0
+        -:   26:#define TYPE_STRING   1
+        -:   27:#define TYPE_INT      2
+        -:   28:#define TYPE_DOUBLE   3
+        -:   29:#define TYPE_BOOL     4
+        -:   30:#define TYPE_NULL     5
+        -:   31:#define TYPE_KEYVALUE 6
+        -:   32:#define TYPE_OBJECT   7
+        -:   33:#define TYPE_ARRAY    8
+        -:   34:
+        -:   35:#include "sym_table.hpp"
+        -:   36:
+        -:   37:
+        -:   38:extern "C"
+        -:   39:    {
+        -:   40:    #include <stdio.h>
+        -:   41:    #include <string.h>
+        -:   42:    #include <stdlib.h>
+        -:   43:    #include <stdio.h>
+        -:   44:    #include <curl/curl.h>
+        -:   45:    #include "parser.h"
+        -:   46:    #include "lexer.h"
+        -:   47:    #include "string.h"
+        -:   48:
+        -:   49:    int my_yy_scan_buffer(char *buffer, int size, void *lexer);
+        -:   50:    };
+        -:   51:
+        -:   52:
+        -:   53:typedef struct ast_s {
+        -:   54:    char op;
+        -:   55:    struct ast_s *rvalue;
+        -:   56:    struct ast_s *lvalue;
+        -:   57:    struct ast_s *parent;
+        -:   58:} ast_t;
+        -:   59:
+        -:   60:class parse_util
+        -:   61:    {
+        -:   62:public:
+        -:   63:
+    #####:   64:    parse_util() {}
+    #####:   65:    virtual ~parse_util() {}
+        -:   66:
+    #####:   67:    char get_op(ast_t *pt) { if(pt) return pt->op; else return '\x0'; }
+    #####:   68:    ast_t *get_rvalue(ast_t *pt) { if(pt) return pt->rvalue; else return NULL; }
+    #####:   69:    ast_t *get_lvalue(ast_t *pt) { if(pt) return pt->lvalue; else return NULL; }
+        -:   70:
+        -:   71:    ast_t *get_parent(ast_t *pt) { if(pt) return pt->parent; else return NULL; }
+        -:   72:
+        -:   73:    ast_t *set_op(ast_t *pt, char op) 
+        -:   74:        { 
+        -:   75:        if(pt) pt->op=op; 
+        -:   76:        return pt; 
+        -:   77:        }
+        -:   78:
+        -:   79:    ast_t *set_rvalue(ast_t *pt, ast_t *rvalue)
+        -:   80:        {
+        -:   81:        if(pt) pt->rvalue = rvalue;
+        -:   82:        return pt;
+        -:   83:        }
+        -:   84:
+        -:   85:    ast_t *set_lvalue(ast_t *pt, ast_t *lvalue)
+        -:   86:        {
+        -:   87:        if(pt) pt->lvalue = lvalue;
+        -:   88:        return pt;
+        -:   89:        }
+        -:   90:
+        -:   91:    int cmp_parse_tree(ast_t *pt1, ast_t *pt2, double epsilon=0.001 )
+        -:   92:        {
+        -:   93:        int rv; 
+        -:   94:        if(pt1 && !pt2) return 1;
+        -:   95:        else if(!pt1 && pt2) return -1;
+        -:   96:        if(pt1->op != pt2->op) { return -1; }
+        -:   97:        switch(pt1->op)
+        -:   98:            {
+        -:   99:        case ':':
+        -:  100:        case ',':
+        -:  101:            rv = cmp_parse_tree((ast_t *)(pt1->lvalue),(ast_t *)(pt2->lvalue));
+        -:  102:            if(rv==0) rv=cmp_parse_tree((ast_t *)(pt1->lvalue),(ast_t *)(pt2->lvalue));
+        -:  103:            return rv; 
+        -:  104:            break;
+        -:  105:
+        -:  106:        case 'o':
+        -:  107:        case 'a': 
+        -:  108:            return cmp_parse_tree((ast_t *)(pt1->lvalue),(ast_t *)(pt2->lvalue)); 
+        -:  109:            break;
+        -:  110:
+        -:  111:        case 'c':
+        -:  112:            //fprintf(stderr,"%s", (char *)parse_tree->rvalue);
+        -:  113:            return strcmp((char *)(pt1->rvalue),(char *)(pt2->rvalue));
+        -:  114:            break;
+        -:  115:        case 'i':
+        -:  116:            //fprintf(stderr,"%lld", *((long long *)parse_tree->rvalue));
+        -:  117:            if( *((long long*)(pt1->rvalue)) > *((long long *)(pt2->rvalue))) return 1;
+        -:  118:            else if (*((long long*)(pt1->rvalue)) < *((long long *)(pt2->rvalue))) return -1;
+        -:  119:            else return 0;
+        -:  120:            break;
+        -:  121:        case 'd':
+        -:  122:            //fprintf(stderr,"%f", *((double *) parse_tree->rvalue));
+        -:  123:            if( *((double *)(pt1->rvalue)) + epsilon > *((double*)(pt2->rvalue))) return 1;
+        -:  124:            else if (*((double*)(pt1->rvalue))  - epsilon < *((double*)(pt2->rvalue))) return -1;
+        -:  125:            else return 0;
+        -:  126:            break;
+        -:  127:
+        -:  128:        case 't':
+        -:  129:        case 'f':
+        -:  130:        case 'n':
+        -:  131:            return 0;
+        -:  132:            break;
+        -:  133:            }
+        -:  134:        return -1;
+        -:  135:        }
+        -:  136:
+        -:  137:    void free_parse_tree(void *pt)
+        -:  138:        {
+    #####:  139:        ast_t *parse_tree=(ast_t *)pt;
+    #####:  140:        if(parse_tree)
+        -:  141:            {
+    #####:  142:            switch(parse_tree->op)
+        -:  143:                {
+        -:  144:            case ',':
+        -:  145:            case 'a':
+        -:  146:            case 'o':
+        -:  147:            case ':':
+    #####:  148:                if(parse_tree->lvalue) { free_parse_tree(parse_tree->lvalue); parse_tree->lvalue=NULL; }
+    #####:  149:                if(parse_tree->rvalue) { free_parse_tree(parse_tree->rvalue); parse_tree->rvalue=NULL; }
+    #####:  150:                free(parse_tree);
+    #####:  151:                break;
+        -:  152:            case 'c':
+        -:  153:            case 'i':
+        -:  154:            case 'd':
+    #####:  155:                if(parse_tree->rvalue) { free(parse_tree->rvalue); parse_tree->rvalue=NULL; }
+    #####:  156:                free(parse_tree);
+    #####:  157:                break;
+        -:  158:            case 't':
+        -:  159:            case 'f':
+        -:  160:            case 'n':
+    #####:  161:                free(parse_tree);
+    #####:  162:                break;
+        -:  163:            default:
+    #####:  164:                break;
+        -:  165:                }
+    #####:  166:            }
+    #####:  167:        }
+        -:  168:
+        -:  169:    void dump_parse_tree(const char *msg, void *pt, int indent=0)
+        -:  170:        {
+        -:  171:        if(msg) { fprintf(stderr,"INFO: %s\n",msg); }
+        -:  172:        ast_t *parse_tree=(ast_t *)pt;
+        -:  173:        if(parse_tree)
+        -:  174:            {
+        -:  175:            if(indent>0) { for(int x=0; x<indent; x++) { fputc(' ',stderr); } }
+        -:  176:            switch (parse_tree->op)
+        -:  177:                {
+        -:  178:            case ',':
+        -:  179:                if(indent>0) { for(int x=0; x<indent; x++) { fputc(' ',stderr); } }
+        -:  180:                dump_parse_tree(NULL,parse_tree->lvalue);
+        -:  181:                fprintf(stderr,",\n");
+        -:  182:                dump_parse_tree(NULL,parse_tree->rvalue,indent);
+        -:  183:                if(((ast_t *)(parse_tree->rvalue))->op!=',') fprintf(stderr,"\n");
+        -:  184:                break;
+        -:  185:                //case 'o':
+        -:  186:                //case 'a':
+        -:  187:                //    dump_parse_tree(NULL,parse_tree->rvalue,indent+4); break;
+        -:  188:            case 'a':
+        -:  189:            case 'o':
+        -:  190:                if(indent>0) { for(int x=0; x<indent; x++) { fputc(' ',stderr); } }
+        -:  191:                if(parse_tree->op=='a') fprintf(stderr,"[");
+        -:  192:                else fprintf(stderr,"{");
+        -:  193:                if(parse_tree->rvalue)
+        -:  194:                    {
+        -:  195:                    switch(((ast_t *)(parse_tree->rvalue))->op)
+        -:  196:                        {
+        -:  197:                    case 'a':
+        -:  198:                    case 'o':
+        -:  199:                        dump_parse_tree(NULL,parse_tree->rvalue,indent+4);
+        -:  200:                        break;
+        -:  201:                    case ',':
+        -:  202:                        dump_parse_tree(NULL,parse_tree->rvalue,indent+4);
+        -:  203:                        break;
+        -:  204:                    default:
+        -:  205:                        dump_parse_tree(NULL,parse_tree->rvalue);
+        -:  206:                        }
+        -:  207:                    }
+        -:  208:                if(parse_tree->op=='a') fprintf(stderr,"  ]\n");
+        -:  209:                else fprintf(stderr,"}\n");
+        -:  210:                break;
+        -:  211:            //case 'j':
+        -:  212:            //case 'o':
+        -:  213:            //    fprintf(stderr,"%c {\n",parse_tree->op);
+        -:  214:            //    dump_parse_tree(NULL,parse_tree->rvalue,indent+4);
+        -:  215:            //    if(indent>0) { for(int x=0; x<indent; x++) { fputc(' ',stderr); } }
+        -:  216:            //    fprintf(stderr,"  }\n",parse_tree->op);
+        -:  217:            //    break;
+        -:  218:            case ':':
+        -:  219:                //fprintf(stderr,":",parse_tree->op, (char *)((parse_tree->rvalue)->lvalue));
+        -:  220:                if(indent>0) { for(int x=0; x<indent; x++) { fputc(' ',stderr); } }
+        -:  221:                dump_parse_tree(NULL,parse_tree->lvalue);
+        -:  222:                fprintf(stderr,":");
+        -:  223:                dump_parse_tree(NULL,parse_tree->rvalue);
+        -:  224:                break;
+        -:  225:
+        -:  226:            /* Thse are all leaves of the tree don't go down any father */
+        -:  227:            case 'c':
+        -:  228:                fprintf(stderr,"%s", (char *)parse_tree->rvalue);
+        -:  229:                break;
+        -:  230:            case 'i':
+        -:  231:                fprintf(stderr,"%lld", *((long long *)parse_tree->rvalue));
+        -:  232:                break;
+        -:  233:            case 'd':
+        -:  234:                fprintf(stderr,"%f", *((double *) parse_tree->rvalue));
+        -:  235:                break;
+        -:  236:            case 't':
+        -:  237:                fprintf(stderr,"true");
+        -:  238:                break;
+        -:  239:            case 'f':
+        -:  240:                fprintf(stderr,"false");
+        -:  241:                break;
+        -:  242:            case 'n':
+        -:  243:                fprintf(stderr,"null");
+        -:  244:                break;
+        -:  245:            default:
+        -:  246:                fprintf(stderr,"ERROR: unknown type %c",parse_tree->op);
+        -:  247:                break;
+        -:  248:                }
+        -:  249:            }
+        -:  250:        }
+        -:  251:
+        -:  252:    //moved this here as it is generally useful
+        -:  253:    void *parse(const char *str)
+        -:  254:        {
+    #####:  255:        void *parse_tree=NULL;
+        -:  256:        char *in_str;
+        -:  257:        
+    #####:  258:        int x=strlen(str);
+    #####:  259:        in_str=(char *)calloc(sizeof(char), x+3);
+        -:  260:        
+    #####:  261:        strcpy(in_str,str);
+    #####:  262:        in_str[x+1]=0;
+        -:  263:        
+        -:  264:        yyscan_t lexer;
+    #####:  265:        if(yylex_init(&lexer)) { printf("Error: Cannot initialize lexer\n"); abort(); }
+    #####:  266:        my_yy_scan_buffer(in_str,x,lexer);
+        -:  267:
+        -:  268:        //YYSTYPE yylval_param;
+        -:  269:        //YYLTYPE yylloc_param;
+        -:  270:        //To test just the scanner
+        -:  271:        //while(yylex(&yylval_param, &yylloc_param ,lexer));
+        -:  272:
+    #####:  273:        yyparse(lexer, &parse_tree);
+    #####:  274:        yylex_destroy(lexer);
+        -:  275:        //free(in_str2);
+    #####:  276:        return parse_tree;
+        -:  277:        }
+        -:  278:
+        -:  279:    int dump_json(void *pt, int indent=0)
+        -:  280:        {
+        -:  281:        //this is for test code
+        -:  282:        return 0;
+        -:  283:        }
+        -:  284:
+        -:  285:    int get_type(ast_t *pt)
+        -:  286:        {
+    #####:  287:        if(pt)
+        -:  288:            {
+    #####:  289:            switch(pt->op)
+        -:  290:                {
+    #####:  291:            case 'o': return TYPE_OBJECT; break;
+    #####:  292:            case 'a': return TYPE_ARRAY; break;
+    #####:  293:            case ':': return TYPE_KEYVALUE; break;
+    #####:  294:            case 'c': return TYPE_STRING; break;
+        -:  295:            case 'i': 
+    #####:  296:                if(pt->rvalue) return TYPE_INT; 
+    #####:  297:                break;
+    #####:  298:            case 'd': return TYPE_DOUBLE; break;
+        -:  299:            case 't':
+    #####:  300:            case 'f': return TYPE_BOOL; break;
+    #####:  301:            case 'n': return TYPE_NULL; break;
+    #####:  302:            case ',': if(pt->lvalue && pt->rvalue) return SEPARATOR; break;
+        -:  303:                }
+    #####:  304:            }
+    #####:  305:        return TYPE_UNK;
+    #####:  306:        }
+        -:  307:    long get_int(ast_t *pt)
+        -:  308:        {
+        -:  309:        if(get_type(pt)==TYPE_INT)
+        -:  310:            {
+        -:  311:            return *((long *)(pt->rvalue));
+        -:  312:            }
+        -:  313:        return 0;
+        -:  314:        }
+        -:  315:    long get_bool(ast_t *pt)
+        -:  316:        {
+    #####:  317:        if(get_type(pt)==TYPE_BOOL)
+        -:  318:            {
+    #####:  319:            if(pt->op=='t') return 1;
+    #####:  320:            else if(pt->op=='f') return 0;
+    #####:  321:            }
+    #####:  322:        return 0;
+    #####:  323:        }
+        -:  324:    long is_null(ast_t *pt)
+        -:  325:        {
+        -:  326:        if(get_type(pt)==TYPE_NULL)
+        -:  327:            {
+        -:  328:            return 1;
+        -:  329:            }
+        -:  330:        return 0;
+        -:  331:        }
+        -:  332:    double get_double(ast_t *pt)
+        -:  333:        {
+    #####:  334:        if(get_type(pt)==TYPE_DOUBLE)
+        -:  335:            {
+    #####:  336:            return *((double *)(pt->rvalue));
+        -:  337:            }
+    #####:  338:        return 0.0;
+    #####:  339:        }
+        -:  340:    int get_string(ast_t *pt, char *str, int len)
+        -:  341:        {
+    #####:  342:        if(get_type(pt)==TYPE_STRING)
+        -:  343:            {
+    #####:  344:            int ret_val=0;
+    #####:  345:            str[0]='\x00';
+    #####:  346:            if(pt->rvalue)
+        -:  347:                {
+    #####:  348:                strncpy(str,((const char *)(pt->rvalue)),len);
+    #####:  349:                return strlen((char *)(pt->rvalue));
+        -:  350:                }
+    #####:  351:            return 1;
+        -:  352:            }   
+    #####:  353:        return 0;
+    #####:  354:        }
+        -:  355:    int cmp_string(ast_t *pt, const char *str, int len)
+        -:  356:        {
+    #####:  357:        if(get_type(pt)==TYPE_STRING)
+        -:  358:            {
+    #####:  359:            return strncmp(str,(char *)(pt->rvalue),len);
+        -:  360:            }
+    #####:  361:        return BAD_TYPE;
+    #####:  362:        }
+        -:  363:    int get_key(ast_t *pt, char *str, int len)
+        -:  364:        {
+        -:  365:        if(get_type(pt)==TYPE_KEYVALUE)
+        -:  366:            {
+        -:  367:            return get_string(get_lvalue(pt), str, len);
+        -:  368:            }
+        -:  369:        return BAD_TYPE;
+        -:  370:        }
+        -:  371:    int cmp_key(ast_t *pt, const char *str, int len)
+        -:  372:        {
+    #####:  373:        if(get_type(pt)==TYPE_KEYVALUE)
+        -:  374:            {
+    #####:  375:            return cmp_string(get_lvalue(pt), str, len);
+        -:  376:            }
+    #####:  377:        return BAD_TYPE;
+    #####:  378:        }
+        -:  379:    //get_value From KeyValue
+        -:  380:    ast_t *get_value(ast_t *pt)
+        -:  381:        {
+    #####:  382:        if(get_type(pt)==TYPE_KEYVALUE)
+        -:  383:            {
+    #####:  384:            return pt->rvalue;
+        -:  385:            }
+    #####:  386:        return NULL;
+    #####:  387:        }
+        -:  388:    //Array functions
+        -:  389:    //  These assume that the parse tree is like
+        -:  390:    //        ','
+        -:  391:    //     [0]    ','
+        -:  392:    //         [1]   [2]
+        -:  393:    //   more general would be also handle the following
+        -:  394:    //           ','
+        -:  395:    //         ','  [2]
+        -:  396:    //       [0] [1]
+        -:  397:    int get_arrayLength(ast_t *pt)
+        -:  398:        {
+        -:  399:        ast_t *st;
+        -:  400:        int cnt;
+    #####:  401:        if(get_type(pt)==TYPE_ARRAY)  
+        -:  402:            {
+    #####:  403:            if(!pt->rvalue) { return 0; } //empty array
+    #####:  404:            else if(pt->rvalue && get_op(pt->rvalue)!=',')
+        -:  405:                {
+    #####:  406:                return 1;
+        -:  407:                }
+    #####:  408:            else if(pt->rvalue && get_op(pt->rvalue)==',')
+        -:  409:                {
+    #####:  410:                st=pt->rvalue;
+    #####:  411:                cnt=0;
+    #####:  412:                while(get_op(st)==',' && st->rvalue)
+        -:  413:                    {
+    #####:  414:                    cnt++;
+    #####:  415:                    if(st->rvalue ) { st=st->rvalue; }
+        -:  416:                    }
+    #####:  417:                cnt++;
+    #####:  418:                return cnt;
+        -:  419:                }
+    #####:  420:            }
+    #####:  421:        return -1;  
+    #####:  422:        }
+        -:  423:
+        -:  424:    ast_t *get_arrayValue(ast_t *pt, int x)
+        -:  425:        {
+        -:  426:        ast_t *st;
+        -:  427:        int cnt;
+    #####:  428:        if(get_type(pt)==TYPE_ARRAY)  
+        -:  429:            {
+    #####:  430:            if(!pt->rvalue) { return NULL; } //empty array
+    #####:  431:            else if(pt->rvalue && get_op(pt->rvalue)!=',' && x==0 )
+        -:  432:                {
+    #####:  433:                return pt->rvalue;
+        -:  434:                }
+    #####:  435:            else if(pt->rvalue && get_op(pt->rvalue)==',')
+        -:  436:                {
+    #####:  437:                st=pt->rvalue;
+    #####:  438:                cnt=0;
+    #####:  439:                if(x==0) { return st->lvalue; }
+    #####:  440:                while(get_op(st)==',' && cnt<x )
+        -:  441:                    {
+    #####:  442:                    if(st->rvalue) { cnt++; st=st->rvalue; }
+        -:  443:                    }
+    #####:  444:                if(cnt==x)
+        -:  445:                    {
+    #####:  446:                    if(get_op(st)!=',') { return st; }
+    #####:  447:                    return st->lvalue; 
+        -:  448:                    }
+    #####:  449:                }
+    #####:  450:            }
+    #####:  451:        return NULL;  
+    #####:  452:        }
+        -:  453:
+        -:  454:    //dictionary types
+        -:  455:    ast_t *get_KeyValue(ast_t *pt, int x)
+        -:  456:        {
+        -:  457:        ast_t *st;
+        -:  458:        int cnt;
+        -:  459:        if(get_type(pt)==TYPE_OBJECT)  
+        -:  460:            {
+        -:  461:            if(!pt->rvalue) { return NULL; } //empty array
+        -:  462:            else if(pt->rvalue && get_op(pt->rvalue)!=',' && x==0 )
+        -:  463:                {
+        -:  464:                return pt->rvalue;
+        -:  465:                }
+        -:  466:            else if(pt->rvalue && get_op(pt->rvalue)==',')
+        -:  467:                {
+        -:  468:                st=pt->rvalue;
+        -:  469:                cnt=0;
+        -:  470:                if(x==0) { return st->lvalue; }
+        -:  471:                while(get_op(st)==',' && cnt<x )
+        -:  472:                    {
+        -:  473:                    if(st->rvalue && get_op(st->rvalue)==',') { cnt++; st=st->rvalue; }
+        -:  474:                    }
+        -:  475:                if(cnt==x)
+        -:  476:                    {
+        -:  477:                    if(get_op(st)!=',') { return st; }
+        -:  478:                    return st->lvalue; 
+        -:  479:                    }
+        -:  480:                }
+        -:  481:            }    
+        -:  482:        return NULL;    
+        -:  483:        }
+        -:  484:
+        -:  485:    ast_t *get_ValueFromKey(ast_t *pt, const char *key, int len)
+        -:  486:        {
+        -:  487:        ast_t *st;
+        -:  488:        int cnt;
+        -:  489:        //switch (get_type(pt))
+        -:  490:        //    {
+        -:  491:        //case TYPE_KEYVALUE:
+        -:  492:        //case TYPE_OBJECT:
+        -:  493:        //    }
+    #####:  494:        if(get_type(pt)==TYPE_OBJECT)  
+        -:  495:            {
+    #####:  496:            if(!pt->rvalue) { return NULL; } //empty array
+    #####:  497:            else if(pt->rvalue && get_type(pt->rvalue)==TYPE_KEYVALUE)
+        -:  498:                {
+    #####:  499:                if(cmp_key(pt->rvalue, key, len)==0) 
+        -:  500:                    { 
+    #####:  501:                    return get_value(pt->rvalue); 
+        -:  502:                    }
+    #####:  503:                return NULL;
+        -:  504:                }
+    #####:  505:            else if(pt->rvalue && get_op(pt->rvalue)==',')
+        -:  506:                {
+    #####:  507:                st=pt->rvalue;
+    #####:  508:                cnt=0;
+    #####:  509:                while(st && get_op(st)==',' )
+        -:  510:                    {
+    #####:  511:                    if(cmp_key(st->lvalue,key,len)==0) { return get_value(st->lvalue); }
+    #####:  512:                    st=st->rvalue;
+        -:  513:                    }
+    #####:  514:                if(st && get_op(st)!=',') 
+        -:  515:                    {
+    #####:  516:                    if(cmp_key(st,key,len)==0)  { return get_value(st); }
+    #####:  517:                    }
+    #####:  518:                }
+    #####:  519:            }
+    #####:  520:        return NULL;  
+    #####:  521:        }    
+        -:  522:
+        -:  523:    /* from the symbol table, build the types
+        -:  524:     *
+        -:  525:     * not really necessary since we got the symbol table
+        -:  526:     * so, for now, just use the parse tree.
+        -:  527:     */
+        -:  528:    type *get_type(void *pt, char *name=NULL)
+        -:  529:        {
+        -:  530:        ast_t *parse_tree=(ast_t *)pt;
+        -:  531:        ast_t *sub_tree;
+        -:  532:        type *m=NULL,*t=NULL;
+        -:  533:        char new_type=0x00;
+        -:  534:        int arry_size=0;
+        -:  535:
+        -:  536:        if(parse_tree->rvalue)
+        -:  537:            {
+        -:  538:            t=new type;
+        -:  539:            if(name) t->set_name(name);
+        -:  540:            //else t->set_name(parse_tree->key);
+        -:  541:            t->set_size(1);
+        -:  542:            t->set_master_type(((ast_t*)parse_tree->rvalue)->op);
+        -:  543:            t->set_sub_type('\0');
+        -:  544:            switch(t->get_master_type())
+        -:  545:                {
+        -:  546:                    case 'a':
+        -:  547:                    //find size of array
+        -:  548:                    new_type='c';
+        -:  549:                    arry_size=0;
+        -:  550:                    sub_tree=(ast_t*)(parse_tree->rvalue);
+        -:  551:                    if(sub_tree->rvalue)
+        -:  552:                        {
+        -:  553:                        new_type=((ast_t*)(sub_tree->rvalue))->op;
+        -:  554:                        arry_size=1;
+        -:  555:                        while(sub_tree->lvalue)
+        -:  556:                            {
+        -:  557:
+        -:  558:                            //are types consistent
+        -:  559:                            arry_size++;
+        -:  560:                            sub_tree=(ast_t*)(sub_tree->rvalue);
+        -:  561:                            }
+        -:  562:                        }
+        -:  563:                    if(new_type!=0x00)
+        -:  564:                        t->set_master_type(new_type);
+        -:  565:                    t->set_size(arry_size);
+        -:  566:                    break;
+        -:  567:                    case 'j':
+        -:  568:                    case 'o':
+        -:  569:                    sub_tree=(ast_t*)(parse_tree->rvalue);
+        -:  570:
+        -:  571:                    while(sub_tree->lvalue)
+        -:  572:                        {
+        -:  573:                        m=new type;
+        -:  574:
+        -:  575:                        t->add_member(m);
+        -:  576:                        }
+        -:  577:                    break;
+        -:  578:                    case 'i':
+        -:  579:                    case 'd':
+        -:  580:                    case 'c':
+        -:  581:                    /* we already got the type info -- do nothing */
+        -:  582:                    break;
+        -:  583:                }
+        -:  584:            }
+        -:  585:        else
+        -:  586:            {
+        -:  587:            //Give error message
+        -:  588:            }
+        -:  589:        return t;
+        -:  590:        }
+        -:  591:
+        -:  592:    /* This was an attempt at building the symbol table
+        -:  593:     *
+        -:  594:     * The symbol table isn't really needed (though it is a nice to have
+        -:  595:     * to analyze the json types and convert between json to c structures
+        -:  596:     *
+        -:  597:     * for now, just use the parse tree.
+        -:  598:     */
+        -:  599:    int buildSymTable(sym_table *st, void *pt, char *name=NULL)
+        -:  600:        {
+        -:  601:        ast_t *parse_tree=(ast_t *)pt;
+        -:  602:        type *t;
+        -:  603:        while(parse_tree)
+        -:  604:            {
+        -:  605:            switch (parse_tree->op)
+        -:  606:                {
+        -:  607:            case 'a':
+        -:  608:                fprintf(stderr,"%c [\n",parse_tree->op);
+        -:  609:                buildSymTable(st, parse_tree->rvalue);
+        -:  610:                fprintf(stderr,"  ]\n");
+        -:  611:                break;
+        -:  612:            case 'j':
+        -:  613:            case 'o':
+        -:  614:                //This is the start of a new structure!!!
+        -:  615:                fprintf(stderr,"%c {\n",parse_tree->op);
+        -:  616:                buildSymTable(st, parse_tree->rvalue);
+        -:  617:                fprintf(stderr,"  }\n");
+        -:  618:                break;
+        -:  619:            case ':':
+        -:  620:                //key is a structure member
+        -:  621:                //determine_type(parse_tree->rvalue);
+        -:  622:                //fprintf(stderr,"%s",parse_tree->key);
+        -:  623:                //t=get_type((void *)parse_tree);
+        -:  624:                buildSymTable(st, parse_tree->rvalue);
+        -:  625:                break;
+        -:  626:            case 'c':
+        -:  627:                fprintf(stderr,"%c %s \n",parse_tree->op, (char *)parse_tree->rvalue);
+        -:  628:                break;
+        -:  629:            case 'i':
+        -:  630:                fprintf(stderr,"%c %lld \n",parse_tree->op, *((long long *)parse_tree->rvalue));
+        -:  631:                break;
+        -:  632:            case 'd':
+        -:  633:                fprintf(stderr,"%c %f \n",parse_tree->op, *((double *) parse_tree->rvalue));
+        -:  634:                break;
+        -:  635:            case 'T':
+        -:  636:                fprintf(stderr,"%c True \n",parse_tree->op);
+        -:  637:                break;
+        -:  638:            case 'F':
+        -:  639:                fprintf(stderr,"%c False \n",parse_tree->op);
+        -:  640:                break;
+        -:  641:            case 'N':
+        -:  642:                fprintf(stderr,"%c null \n",parse_tree->op);
+        -:  643:                break;
+        -:  644:            default:
+        -:  645:                fprintf(stderr,"ERROR: unknown type %c\n",parse_tree->op);
+        -:  646:                break;
+        -:  647:                }
+        -:  648:            parse_tree=(ast_t *)parse_tree->lvalue;
+        -:  649:            }
+        -:  650:        return 0;
+        -:  651:        }
+        -:  652:
+        -:  653:    int get_data(char *URL, char *data, char *headers)
+        -:  654:        {
+        -:  655:        CURL *curl;
+        -:  656:        CURLcode res;
+        -:  657:
+        -:  658:        /* In windows, this will init the winsock stuff */
+        -:  659:        curl_global_init(CURL_GLOBAL_ALL);
+        -:  660:
+        -:  661:        /* get a curl handle */
+        -:  662:        curl = curl_easy_init();
+        -:  663:        if(curl)
+        -:  664:            {
+        -:  665:            /* First set the URL that is about to receive our POST. This URL can
+        -:  666:             just as well be a https:// URL if that is what should receive the
+        -:  667:             data. */
+        -:  668:            curl_easy_setopt(curl, CURLOPT_URL, "http://postit.example.com/moo.cgi");
+        -:  669:            /* Now specify the POST data */
+        -:  670:            curl_easy_setopt(curl, CURLOPT_POSTFIELDS, "name=daniel&project=curl");
+        -:  671:
+        -:  672:            /* Perform the request, res will get the return code */
+        -:  673:            res = curl_easy_perform(curl);
+        -:  674:            /* Check for errors */
+        -:  675:            if(res != CURLE_OK)
+        -:  676:                fprintf(stderr, "curl_easy_perform() failed: %s\n",
+        -:  677:                        curl_easy_strerror(res));
+        -:  678:
+        -:  679:            /* always cleanup */
+        -:  680:            curl_easy_cleanup(curl);
+        -:  681:            }
+        -:  682:        curl_global_cleanup();
+        -:  683:        return 0;
+        -:  684:        }
+        -:  685:    };
+        -:  686:
+        -:  687:
+        -:  688:
+        -:  689:
+        -:  690:#endif /* OpenStackData_hpp */
+        -:  691:#endif /* parse_tree_hpp */
